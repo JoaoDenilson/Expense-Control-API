@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34330.188
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{9494A65F-4821-4912-8C49-0248CE050505}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Expense-Control.API", "..\Expense-Control.API\Expense-Control.API.csproj", "{8A347ACC-A260-4BDC-A9CF-9A1DAFDBDD89}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8A347ACC-A260-4BDC-A9CF-9A1DAFDBDD89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A347ACC-A260-4BDC-A9CF-9A1DAFDBDD89}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A347ACC-A260-4BDC-A9CF-9A1DAFDBDD89}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A347ACC-A260-4BDC-A9CF-9A1DAFDBDD89}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{8A347ACC-A260-4BDC-A9CF-9A1DAFDBDD89} = {9494A65F-4821-4912-8C49-0248CE050505}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5BC357C1-AAF2-4E39-B271-1DA02ABC8768}
+	EndGlobalSection
+EndGlobal
