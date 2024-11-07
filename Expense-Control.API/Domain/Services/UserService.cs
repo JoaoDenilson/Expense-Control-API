@@ -3,6 +3,7 @@ using Expense_Control.API.Contract.User;
 using Expense_Control.API.Domain.Models;
 using Expense_Control.API.Domain.Repository.Interfaces;
 using Expense_Control.API.Domain.Services.Interfaces;
+using System.Security.Authentication;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -13,12 +14,13 @@ namespace Expense_Control.API.Domain.Services
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
 
-        // private readonly TokenService _tokenService;
+        private readonly TokenService _tokenService;
 
-        public UserService(IUserRepository userRepository, IMapper mapper)
+        public UserService(IUserRepository userRepository, IMapper mapper, TokenService tokenService)
         {
             _userRepository = userRepository;
             _mapper = mapper;
+            _tokenService = tokenService;
         }
         public async Task<UserResponseDTO> Add(UserRequestDTO entity, long userId)
         {
@@ -31,9 +33,23 @@ namespace Expense_Control.API.Domain.Services
             return _mapper.Map<UserResponseDTO>(user);
         }
 
-        public Task<UserLoginResponseDTO> Authenticate(UserLoginRequestDTO user)
+        public async Task<UserLoginResponseDTO> Authenticate(UserLoginRequestDTO userLoginRequest)
         {
-            throw new NotImplementedException();
+            UserResponseDTO user = await Get(userLoginRequest.Email);
+
+            var hashPassword = GenerateHashPassword(userLoginRequest.Password);
+
+            if(user is null || user.Password != hashPassword)
+            {
+                throw new AuthenticationException("Usuário ou senha inválido");
+            }
+
+            return new UserLoginResponseDTO
+            {
+                Id = user.Id,
+                Email = user.Email,
+                Token = _tokenService.GenerateToken(_mapper.Map<User>(user))
+            };
         }
 
         public async Task<IEnumerable<UserResponseDTO>> Get(long userId)

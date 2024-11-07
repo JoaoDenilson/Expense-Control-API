@@ -12,9 +12,9 @@ using Expense_Control.API.AutoMapper;
 
 namespace Expense_Control.API.Extensions
 {
-    public class DependencyInjectionConfig
+    public static class DependencyInjectionConfig
     {
-        public static IServiceCollection RegisterServices(IServiceCollection services)
+        public static IServiceCollection RegisterServices(this IServiceCollection services)
         {
 
             var config = new MapperConfiguration(o =>
@@ -27,6 +27,7 @@ namespace Expense_Control.API.Extensions
             services
                 .AddScoped<IUserRepository, UserRepository>()
                 .AddScoped<IUserService, UserService>()
+                .AddScoped<TokenService>()
                 .AddSingleton(mapper);
 
             return services;

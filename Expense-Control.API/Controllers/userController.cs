@@ -3,6 +3,7 @@ using Expense_Control.API.Domain.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Authentication;
 
 namespace Expense_Control.API.Controllers
 {
@@ -19,7 +20,26 @@ namespace Expense_Control.API.Controllers
         }
 
         [HttpPost]
+        [Route("login")]
         [AllowAnonymous]
+        public async Task<ActionResult> Authentication(UserLoginRequestDTO contract)
+        {
+            try
+            {
+                var result = await _userService.Authenticate(contract);
+                return Ok(result);
+            }
+            catch(AuthenticationException ae)
+            {
+                return Unauthorized(new {statusCode = 401, message = ae.Message});
+            }
+            catch (Exception ex)
+            {
+                return Problem(ex.Message);
+            }
+        }
+
+        [HttpPost]
         public async Task<ActionResult> Add(UserRequestDTO contract) 
         {
             try
@@ -34,7 +54,7 @@ namespace Expense_Control.API.Controllers
         }
 
         [HttpGet]
-        [AllowAnonymous]
+        [Authorize]
         public async Task<ActionResult> GetAll()
         {
             try
@@ -50,7 +70,7 @@ namespace Expense_Control.API.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        [AllowAnonymous]
+        [Authorize]
         public async Task<ActionResult> Get(long id)
         {
             try
@@ -66,7 +86,7 @@ namespace Expense_Control.API.Controllers
 
         [HttpPut]
         [Route("{id}")]
-        [AllowAnonymous]
+        [Authorize]
         public async Task<ActionResult> Update(long id, UserRequestDTO contract)
         {
             try
@@ -82,7 +102,7 @@ namespace Expense_Control.API.Controllers
 
         [HttpDelete]
         [Route("{id}")]
-        [AllowAnonymous]
+        [Authorize]
         public async Task<ActionResult> Delete(long id)
         {
             try
