@@ -1,4 +1,6 @@
-﻿using Expense_Control.API.Contract.User;
+﻿using Expense_Control.API.Contract.NatureLaunch;
+using Expense_Control.API.Domain.Models;
+using Expense_Control.API.Domain.Services;
 using Expense_Control.API.Domain.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -8,43 +10,28 @@ using System.Security.Authentication;
 namespace Expense_Control.API.Controllers
 {
     [ApiController]
-    [Route("users")]
-    public class userController : BaseController
+    [Route("natureslaunch")]
+    public class natureLaunchController : BaseController
     {
-        private readonly ILogger<userController> _logger;
-        private readonly IUserService _userService;
-        public userController(ILogger<userController> logger, IUserService userService)
+        private readonly ILogger<natureLaunchController> _logger;
+        private readonly IService<NatureLaunchRequestDTO, NatureLaunchResponseDTO, long> _natureLaunchService;
+
+        private long _userId;
+        public natureLaunchController(
+            ILogger<natureLaunchController> logger, 
+            IService<NatureLaunchRequestDTO, NatureLaunchResponseDTO, long> natureLaunchService)
         {
             _logger = logger;
-            _userService = userService;
+            _natureLaunchService = natureLaunchService;        
         }
 
         [HttpPost]
-        [Route("login")]
-        [AllowAnonymous]
-        public async Task<ActionResult> Authentication(UserLoginRequestDTO contract)
+        public async Task<ActionResult> Add(NatureLaunchRequestDTO contract) 
         {
             try
             {
-                var result = await _userService.Authenticate(contract);
-                return Ok(result);
-            }
-            catch(AuthenticationException ae)
-            {
-                return Unauthorized(new {statusCode = 401, message = ae.Message});
-            }
-            catch (Exception ex)
-            {
-                return Problem(ex.Message);
-            }
-        }
-
-        [HttpPost]
-        public async Task<ActionResult> Add(UserRequestDTO contract) 
-        {
-            try
-            {
-                var result = await _userService.Add(contract, 0);
+                _userId = GetIdUserLogged();
+                var result = await _natureLaunchService.Add(contract, _userId);
                 return Created();
             }
             catch (Exception ex)
@@ -59,7 +46,8 @@ namespace Expense_Control.API.Controllers
         {
             try
             {
-                var result = await _userService.Get(0);
+                _userId = GetIdUserLogged();
+                var result = await _natureLaunchService.Get(_userId);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -75,7 +63,8 @@ namespace Expense_Control.API.Controllers
         {
             try
             {
-                var result = await _userService.Get(id, 0);
+                _userId = GetIdUserLogged();
+                var result = await _natureLaunchService.Get(id, _userId);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -87,11 +76,12 @@ namespace Expense_Control.API.Controllers
         [HttpPut]
         [Route("{id}")]
         [Authorize]
-        public async Task<ActionResult> Update(long id, UserRequestDTO contract)
+        public async Task<ActionResult> Update(long id, NatureLaunchRequestDTO contract)
         {
             try
             {
-                var result = await _userService.Update(id, contract, 0);
+                _userId = GetIdUserLogged();
+                var result = await _natureLaunchService.Update(id, contract, _userId);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -107,7 +97,8 @@ namespace Expense_Control.API.Controllers
         {
             try
             {
-                await _userService.Inactive(0, id);
+                _userId = GetIdUserLogged();
+                await _natureLaunchService.Inactive(id, _userId);
                 return NoContent();
             }
             catch (Exception ex)

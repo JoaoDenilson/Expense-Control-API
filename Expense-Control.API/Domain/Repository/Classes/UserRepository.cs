@@ -7,42 +7,42 @@ namespace Expense_Control.API.Domain.Repository.Classes
 {
     public class UserRepository : IUserRepository
     {
-        private readonly ApplicationContext _contexto;
+        private readonly ApplicationContext _context;
 
         public UserRepository(ApplicationContext contexto)
         {
-            _contexto = contexto;
+            _context = contexto;
         }
 
         public async Task<User> Add(User entity)
         {
-            await _contexto.Users.AddAsync(entity);
-            await _contexto.SaveChangesAsync();
+            await _context.Users.AddAsync(entity);
+            await _context.SaveChangesAsync();
             return entity;
         }
 
         public async Task Delete(User entity)
         {
             // Delete físico
-            _contexto.Entry(entity).State = EntityState.Deleted;
-            await _contexto.SaveChangesAsync();
+            _context.Entry(entity).State = EntityState.Deleted;
+            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteUser(User entity)
         {
             // Delete lógico 
-            var result = _contexto.Users.Find(entity.Id);
+            var result = _context.Users.Find(entity.Id);
 
             if (result != null)
             {
                 result.InactiveDate = DateTime.Now;
-                await _contexto.SaveChangesAsync();
+                await _context.SaveChangesAsync();
             }
         }
 
         public async Task<User?> Get(string email)
         {
-             var results = await _contexto.Users.AsNoTracking()
+             var results = await _context.Users.AsNoTracking()
                 .Where(u => u.Email == email)
                 .FirstOrDefaultAsync();
 
@@ -51,19 +51,19 @@ namespace Expense_Control.API.Domain.Repository.Classes
 
         public async Task<User?> Get(long id)
         {
-            return await _contexto.Users.AsNoTracking()
+            return await _context.Users.AsNoTracking()
                 .Where(u => u.Id == id)
                 .FirstOrDefaultAsync();
         }
 
         public async Task<IEnumerable<User>> Get()
         {
-            return await _contexto.Users.AsNoTracking().OrderBy(u=> u.Id).ToListAsync();
+            return await _context.Users.AsNoTracking().OrderBy(u=> u.Id).ToListAsync();
         }
 
         public async Task<User> Update(User entity)
         {
-            var results = _contexto.Users
+            var results = _context.Users
                 .Where(u => u.Id == entity.Id)
                 .FirstOrDefault();
 
@@ -71,10 +71,10 @@ namespace Expense_Control.API.Domain.Repository.Classes
             {
                 throw new Exception("User not register");
             }
-            _contexto.Entry(results).CurrentValues.SetValues(entity);
-            _contexto.Update<User>(results);
+            _context.Entry(results).CurrentValues.SetValues(entity);
+            _context.Update<User>(results);
 
-            await _contexto.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
             return results;
         }

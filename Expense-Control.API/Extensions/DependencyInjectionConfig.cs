@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Expense_Control.API.AutoMapper;
+using Expense_Control.API.Contract.NatureLaunch;
 
 namespace Expense_Control.API.Extensions
 {
@@ -20,13 +21,16 @@ namespace Expense_Control.API.Extensions
             var config = new MapperConfiguration(o =>
             {
                 o.AddProfile<UserProfile>();
+                o.AddProfile<NatureLaunchProfile>();
             });
 
             IMapper mapper = config.CreateMapper();
 
             services
                 .AddScoped<IUserRepository, UserRepository>()
+                .AddScoped<INatureLaunchRepository, NatureLaunchRepository>()
                 .AddScoped<IUserService, UserService>()
+                .AddScoped<IService<NatureLaunchRequestDTO, NatureLaunchResponseDTO, long>, NatureLaunchService>()
                 .AddScoped<TokenService>()
                 .AddSingleton(mapper);
 
