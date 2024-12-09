@@ -23,6 +23,7 @@ namespace Expense_Control.API.Extensions
                 o.AddProfile<UserProfile>();
                 o.AddProfile<NatureLaunchProfile>();
                 o.AddProfile<TitleToPayProfile>();
+                o.AddProfile<TitleToReceiveProfile>();
             });
 
             IMapper mapper = config.CreateMapper();
@@ -31,9 +32,11 @@ namespace Expense_Control.API.Extensions
                 .AddScoped<IUserRepository, UserRepository>()
                 .AddScoped<INatureLaunchRepository, NatureLaunchRepository>()
                 .AddScoped<ITitleToPayRepository, TitleToPayRepository>()
+                .AddScoped<ITitleToReceiveRepository, TitleToReceiveRepository>()
                 .AddScoped<IUserService, UserService>()
                 .AddScoped<IService<NatureLaunchRequestDTO, NatureLaunchResponseDTO, long>, NatureLaunchService>()
                 .AddScoped<IService<TitleToPayRequestDTO, TitleToPayResponseDTO, long>, TitleToPayService>()
+                .AddScoped<IService<TitleToReceiveRequestDTO, TitleToReceiveResponseDTO, long>, TitleToReceiveService>()
                 .AddScoped<TokenService>()
                 .AddSingleton(mapper);
 
