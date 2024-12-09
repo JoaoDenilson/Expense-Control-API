@@ -11,10 +11,13 @@ namespace Expense_Control.API.Data
         {
             this.Users = this.Set<User>();
             this.NatureLaunche = this.Set<NatureLaunch>();
+            this.TitleToPay = this.Set<TitleToPay>();
         }
         public DbSet<User> Users { get; set; }
 
         public DbSet<NatureLaunch> NatureLaunche { get; set; }
+
+        public DbSet<TitleToPay> TitleToPay { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -22,6 +25,7 @@ namespace Expense_Control.API.Data
             {
                 _ = modelBuilder.ApplyConfiguration(new UsersConfiguration());
                 _ = modelBuilder.ApplyConfiguration(new NatureLaunchConfiguration());
+                _ = modelBuilder.ApplyConfiguration(new TitleToPayConfiguration());
 
                 base.OnModelCreating(modelBuilder);
             }
