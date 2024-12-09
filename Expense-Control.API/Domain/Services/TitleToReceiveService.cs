@@ -3,6 +3,7 @@ using Expense_Control.API.Contract.NatureLaunch;
 using Expense_Control.API.Domain.Models;
 using Expense_Control.API.Domain.Repository.Interfaces;
 using Expense_Control.API.Domain.Services.Interfaces;
+using Expense_Control.API.Exceptions;
 
 namespace Expense_Control.API.Domain.Services
 {
@@ -19,6 +20,7 @@ namespace Expense_Control.API.Domain.Services
 
         public async Task<TitleToReceiveResponseDTO> Add(TitleToReceiveRequestDTO entity, long userId)
         {
+            validityValueIsNull(entity);
             var titleToReceive = _mapper.Map<TitleToReceive>(entity);
 
             titleToReceive.RegisterDate = DateTime.Now;
@@ -52,6 +54,7 @@ namespace Expense_Control.API.Domain.Services
 
         public async Task<TitleToReceiveResponseDTO> Update(long id, TitleToReceiveRequestDTO entity, long userId)
         {
+            validityValueIsNull(entity);
             var titleToReceive = await GetByIdBindId(id, userId);
 
             var contract = _mapper.Map<TitleToReceive>(titleToReceive);
@@ -72,10 +75,17 @@ namespace Expense_Control.API.Domain.Services
 
             if (titleToReceive == null || titleToReceive.UserId != userId)
             {
-                throw new Exception($"Title to Receive by Id - {id} not found");
+                throw new NotfoundException($"Title to Receive by Id - {id} not found");
             }
 
             return titleToReceive;
+        }
+        private void validityValueIsNull(TitleToReceiveRequestDTO entity)
+        {
+            if (entity.OriginalValue < 0 || entity.OriginalValue < 0)
+            {
+                throw new BadRequestException("Os campos valor original e valor recebimento não pode ser negativos");
+            }
         }
     }
 }

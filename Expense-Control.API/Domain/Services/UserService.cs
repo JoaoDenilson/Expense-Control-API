@@ -3,6 +3,7 @@ using Expense_Control.API.Contract.User;
 using Expense_Control.API.Domain.Models;
 using Expense_Control.API.Domain.Repository.Interfaces;
 using Expense_Control.API.Domain.Services.Interfaces;
+using Expense_Control.API.Exceptions;
 using System.Security.Authentication;
 using System.Security.Cryptography;
 using System.Text;
@@ -75,7 +76,7 @@ namespace Expense_Control.API.Domain.Services
 
         public async Task Inactive(long id, long userId)
         {
-            var user = _userRepository.Get(id) ?? throw new Exception("User not found.");
+            var user = _userRepository.Get(id) ?? throw new NotfoundException("User not found.");
 
             await _userRepository.DeleteUser(_mapper.Map<User>(user));
 
@@ -83,7 +84,7 @@ namespace Expense_Control.API.Domain.Services
 
         public async Task<UserResponseDTO> Update(long id, UserRequestDTO entity, long userId)
         {
-            _ = _userRepository.Get(id) ?? throw new Exception("User not found.");
+            _ = _userRepository.Get(id) ?? throw new NotfoundException("User not found.");
 
             var user = _mapper.Map<User>(entity);
 

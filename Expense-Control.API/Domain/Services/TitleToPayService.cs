@@ -3,6 +3,7 @@ using Expense_Control.API.Contract.NatureLaunch;
 using Expense_Control.API.Domain.Models;
 using Expense_Control.API.Domain.Repository.Interfaces;
 using Expense_Control.API.Domain.Services.Interfaces;
+using Expense_Control.API.Exceptions;
 
 namespace Expense_Control.API.Domain.Services
 {
@@ -19,6 +20,8 @@ namespace Expense_Control.API.Domain.Services
 
         public async Task<TitleToPayResponseDTO> Add(TitleToPayRequestDTO entity, long userId)
         {
+            validityValueIsNull(entity);
+
             var titleToPay = _mapper.Map<TitleToPay>(entity);
 
             titleToPay.RegisterDate = DateTime.Now;
@@ -52,6 +55,8 @@ namespace Expense_Control.API.Domain.Services
 
         public async Task<TitleToPayResponseDTO> Update(long id, TitleToPayRequestDTO entity, long userId)
         {
+            validityValueIsNull(entity);
+
             var titleToPay = await GetByIdBindId(id, userId);
 
             var contract = _mapper.Map<TitleToPay>(titleToPay);
@@ -72,10 +77,17 @@ namespace Expense_Control.API.Domain.Services
 
             if (titleToPay == null || titleToPay.UserId != userId)
             {
-                throw new Exception($"Title to pay by Id - {id} not found");
+                throw new NotfoundException($"Title to pay by Id - {id} not found");
             }
 
             return titleToPay;
+        }
+        private void validityValueIsNull(TitleToPayRequestDTO entity)
+        {
+            if (entity.OriginalValue < 0 || entity.OriginalValue < 0)
+            {
+                throw new BadRequestException("Os campos valor original e valor recebimento não pode ser negativos");
+            }
         }
     }
 }

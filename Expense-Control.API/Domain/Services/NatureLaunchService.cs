@@ -5,6 +5,7 @@ using Expense_Control.API.Domain.Models;
 using Expense_Control.API.Domain.Repository.Classes;
 using Expense_Control.API.Domain.Repository.Interfaces;
 using Expense_Control.API.Domain.Services.Interfaces;
+using Expense_Control.API.Exceptions;
 
 namespace Expense_Control.API.Domain.Services
 {
@@ -70,7 +71,7 @@ namespace Expense_Control.API.Domain.Services
 
             if (natureLaunch == null || natureLaunch.UserId != userId)
             {
-                throw new Exception($"Nature launch by Id - {id} not found");
+                throw new NotfoundException($"Nature launch by Id - {id} not found");
             }
 
             return natureLaunch;
